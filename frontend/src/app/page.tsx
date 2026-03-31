@@ -5,7 +5,12 @@ import PaperCard from "@/components/PaperCard";
 import { listPapers } from "@/lib/api";
 
 export default async function Home() {
-  const papers = await listPapers();
+  let papers: Awaited<ReturnType<typeof listPapers>> = [];
+  try {
+    papers = await listPapers();
+  } catch (e) {
+    console.error("Failed to fetch papers:", e);
+  }
 
   return (
     <div className="flex flex-1 flex-col items-center bg-zinc-50 font-sans dark:bg-black">
