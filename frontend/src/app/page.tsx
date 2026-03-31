@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import SubmitForm from "@/components/SubmitForm";
 import PaperCard from "@/components/PaperCard";
 import { listPapers } from "@/lib/api";
