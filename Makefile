@@ -11,3 +11,6 @@ run-db:
 
 stop-db:
 	cd $(ROOT_DIR) && docker compose down
+
+aws-login:
+	aws sso login --profile PowerUserAccess-767397762455

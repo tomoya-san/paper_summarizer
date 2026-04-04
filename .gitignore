@@ -10,3 +10,23 @@ node_modules/
 
 # DB
 *.db
+
+# Terraform
+**/.terraform/*
+.terraform.lock.hcl
+
+# .tfstate files
+*.tfstate
+*.tfstate.backup
+*.tfstate.*
+
+# .tfstate files
+*.tfvars
+*.tfvars.*
+
+crash.log
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
