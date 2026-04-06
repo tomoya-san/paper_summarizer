@@ -13,4 +13,4 @@ stop-db:
 	cd $(ROOT_DIR) && docker compose down
 
 aws-login:
-	aws sso login --profile PowerUserAccess-767397762455
+	cd $(ROOT_DIR) && aws sso login --profile PowerUserAccess-767397762455
