@@ -15,6 +15,7 @@ resource "aws_lambda_function" "api" {
   environment {
     variables = {
       PAPERS_TABLE_NAME = aws_dynamodb_table.papers.name
+      SQS_QUEUE_URL     = aws_sqs_queue.paper_summarize.url
     }
   }
 }

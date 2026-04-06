@@ -37,3 +37,20 @@ resource "aws_iam_role_policy_attachment" "api_lambda_dynamodb" {
   role       = aws_iam_role.api_lambda.name
   policy_arn = aws_iam_policy.api_lambda_dynamodb.arn
 }
+
+data "aws_iam_policy_document" "api_lambda_sqs" {
+  statement {
+    actions   = ["sqs:SendMessage"]
+    resources = [aws_sqs_queue.paper_summarize.arn]
+  }
+}
+
+resource "aws_iam_policy" "api_lambda_sqs" {
+  name   = "paper-summarizer-api-sqs"
+  policy = data.aws_iam_policy_document.api_lambda_sqs.json
+}
+
+resource "aws_iam_role_policy_attachment" "api_lambda_sqs" {
+  role       = aws_iam_role.api_lambda.name
+  policy_arn = aws_iam_policy.api_lambda_sqs.arn
+}
