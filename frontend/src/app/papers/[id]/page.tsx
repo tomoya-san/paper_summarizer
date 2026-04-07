@@ -8,7 +8,7 @@ export default async function PaperPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const paper = await getPaper(Number(id));
+  const paper = await getPaper(id);
 
   return (
     <div className="flex flex-1 flex-col items-center bg-zinc-50 font-sans dark:bg-black">
