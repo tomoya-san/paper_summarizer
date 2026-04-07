@@ -1,4 +1,12 @@
+import json
+import os
+
+import boto3
+
 from repositories.paper_repository import PaperRepository
+
+sqs = boto3.client("sqs")
+queue_url = os.environ["SQS_QUEUE_URL"]
 
 
 class PaperService:
@@ -12,5 +20,9 @@ class PaperService:
         return self.paper_repository.find_by_id(paper_id)
 
     def submit_papers(self, urls: list[str]) -> int:
-        # TODO: Send each URL to SQS
+        for url in urls:
+            sqs.send_message(
+                QueueUrl=queue_url,
+                MessageBody=json.dumps({"url": url}),
+            )
         return len(urls)
