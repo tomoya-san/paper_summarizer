@@ -48,3 +48,8 @@ update-worker:
 		--region $(AWS_REGION)
 
 deploy-lambdas: ecr-login push-api push-worker update-api update-worker
+
+.PHONY: sync-env
+sync-env:
+	@grep NEXT_PUBLIC_COGNITO_USER_POOL_ID frontend/.env.local | cut -d= -f2 | vercel env add NEXT_PUBLIC_COGNITO_USER_POOL_ID production
+	@grep NEXT_PUBLIC_COGNITO_CLIENT_ID frontend/.env.local | cut -d= -f2 | vercel env add NEXT_PUBLIC_COGNITO_CLIENT_ID production
