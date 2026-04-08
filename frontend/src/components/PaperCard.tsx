@@ -10,7 +10,7 @@ import { Paper } from "@/lib/api";
 
 export default function PaperCard({ paper }: { paper: Paper }) {
   return (
-    <Link href={`/papers/${paper.id}`}>
+    <Link href={`/papers/${encodeURIComponent(paper.created_at)}`}>
       <Card className="transition-shadow hover:shadow-md">
         <CardHeader>
           <CardTitle>{paper.title}</CardTitle>

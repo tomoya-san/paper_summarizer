@@ -10,4 +10,8 @@ router = Router(paper_controller)
 
 
 def handler(event, context):
-    return router.route(event)
+    method = event["requestContext"]["http"]["method"]
+    if method == "OPTIONS":
+        return router.route(event, None)
+    user_id = event["requestContext"]["authorizer"]["jwt"]["claims"]["sub"]
+    return router.route(event, user_id)

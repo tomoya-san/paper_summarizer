@@ -16,18 +16,39 @@ resource "aws_apigatewayv2_stage" "default" {
   auto_deploy = true
 }
 
+resource "aws_apigatewayv2_authorizer" "cognito" {
+  api_id           = aws_apigatewayv2_api.api.id
+  authorizer_type  = "JWT"
+  identity_sources = ["$request.header.Authorization"]
+  name             = "cognito"
+
+  jwt_configuration {
+    audience = [aws_cognito_user_pool_client.frontend.id]
+    issuer   = "https://cognito-idp.${var.aws_region}.amazonaws.com/${aws_cognito_user_pool.main.id}"
+  }
+}
+
 resource "aws_apigatewayv2_integration" "api_lambda" {
   api_id                 = aws_apigatewayv2_api.api.id
   integration_type       = "AWS_PROXY"
   integration_uri        = aws_lambda_function.api.invoke_arn
   integration_method     = "POST"
-  payload_format_version = "1.0"
+  payload_format_version = "2.0"
 }
 
 resource "aws_apigatewayv2_route" "proxy" {
-  api_id    = aws_apigatewayv2_api.api.id
-  route_key = "ANY /{proxy+}"
-  target    = "integrations/${aws_apigatewayv2_integration.api_lambda.id}"
+  api_id             = aws_apigatewayv2_api.api.id
+  route_key          = "ANY /{proxy+}"
+  target             = "integrations/${aws_apigatewayv2_integration.api_lambda.id}"
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.cognito.id
+}
+
+resource "aws_apigatewayv2_route" "options" {
+  api_id             = aws_apigatewayv2_api.api.id
+  route_key          = "OPTIONS /{proxy+}"
+  target             = "integrations/${aws_apigatewayv2_integration.api_lambda.id}"
+  authorization_type = "NONE"
 }
 
 resource "aws_lambda_permission" "api_gateway" {

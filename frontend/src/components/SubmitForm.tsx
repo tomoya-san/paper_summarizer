@@ -1,17 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { submitPapers } from "@/lib/api";
 
-export default function SubmitForm() {
+export default function SubmitForm({ onSubmitted }: { onSubmitted?: () => void }) {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -23,7 +21,7 @@ export default function SubmitForm() {
       await submitPapers([url]);
       setUrl("");
       setSubmitted(true);
-      router.refresh();
+      onSubmitted?.();
     } catch {
       setError("Failed to submit paper. Check the URL and try again.");
     } finally {

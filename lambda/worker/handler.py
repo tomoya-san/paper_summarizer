@@ -13,11 +13,13 @@ def handler(event, context):
     for record in event["Records"]:
         body = json.loads(record["body"])
         url = body["url"]
+        user_id = body["user_id"]
 
         paper = arxiv_service.fetch_paper(url)
         summary = summarizer_service.summarize(paper.pdf_content)
 
         paper_store.save(
+            user_id=user_id,
             url=url,
             title=paper.title,
             authors=paper.authors,
