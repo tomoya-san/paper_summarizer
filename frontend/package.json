@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "echo POOL_ID=$NEXT_PUBLIC_COGNITO_USER_POOL_ID && next build",
     "start": "next start",
     "lint": "eslint"
   },
