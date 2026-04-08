@@ -21,8 +21,7 @@ resource "aws_iam_role_policy_attachment" "api_lambda_basic" {
 data "aws_iam_policy_document" "api_lambda_dynamodb" {
   statement {
     actions = [
-      "dynamodb:GetItem",
-      "dynamodb:Scan",
+      "dynamodb:Query",
     ]
     resources = [aws_dynamodb_table.papers.arn]
   }

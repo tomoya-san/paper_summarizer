@@ -1,7 +1,9 @@
+import { getIdToken } from "@/lib/auth";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export interface Paper {
-  id: string;
+  user_id: string;
   url: string;
   title: string;
   authors: string[];
@@ -9,10 +11,26 @@ export interface Paper {
   created_at: string;
 }
 
-export async function submitPapers(urls: string[]): Promise<{ message: string }> {
-  const res = await fetch(`${API_BASE}/papers/summarize`, {
+async function authFetch(
+  url: string,
+  options: RequestInit = {},
+): Promise<Response> {
+  const token = await getIdToken();
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(options.headers as Record<string, string>),
+  };
+  if (token) {
+    headers["Authorization"] = token;
+  }
+  return fetch(url, { ...options, headers });
+}
+
+export async function submitPapers(
+  urls: string[],
+): Promise<{ message: string }> {
+  const res = await authFetch(`${API_BASE}/papers/summarize`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ urls }),
   });
   if (!res.ok) throw new Error("Failed to submit papers");
@@ -22,21 +40,26 @@ export async function submitPapers(urls: string[]): Promise<{ message: string }>
 function parsePaper(raw: Record<string, unknown>): Paper {
   return {
     ...raw,
-    authors: typeof raw.authors === "string"
-      ? raw.authors.split(",").map((a: string) => a.trim())
-      : raw.authors,
+    authors:
+      typeof raw.authors === "string"
+        ? raw.authors.split(",").map((a: string) => a.trim())
+        : raw.authors,
   } as Paper;
 }
 
 export async function listPapers(): Promise<Paper[]> {
-  const res = await fetch(`${API_BASE}/papers`);
+  const res = await authFetch(`${API_BASE}/papers`);
+  //DEBUG
+  console.log(res);
   if (!res.ok) throw new Error("Failed to fetch papers");
   const data = await res.json();
   return data.map(parsePaper);
 }
 
-export async function getPaper(id: string): Promise<Paper> {
-  const res = await fetch(`${API_BASE}/papers/${id}`);
+export async function getPaper(createdAt: string): Promise<Paper> {
+  const res = await authFetch(
+    `${API_BASE}/papers/${encodeURIComponent(createdAt)}`,
+  );
   if (!res.ok) throw new Error("Paper not found");
   const data = await res.json();
   return parsePaper(data);

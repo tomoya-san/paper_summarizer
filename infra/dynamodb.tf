@@ -1,11 +1,16 @@
 resource "aws_dynamodb_table" "papers" {
   name         = "papers"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "id"
+  hash_key     = "user_id"
+  range_key    = "created_at"
 
   attribute {
-    name = "id"
+    name = "user_id"
     type = "S"
   }
 
+  attribute {
+    name = "created_at"
+    type = "S"
+  }
 }

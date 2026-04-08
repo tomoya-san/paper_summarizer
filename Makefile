@@ -35,4 +35,16 @@ push-api: build-api
 push-worker: build-worker
 	docker push $(ECR_URL)/paper-summarizer-worker:latest
 
-deploy-lambdas: ecr-login push-api push-worker
+update-api:
+	aws lambda update-function-code \
+		--function-name paper-summarizer-api \
+		--image-uri $(ECR_URL)/paper-summarizer-api:latest \
+		--region $(AWS_REGION)
+
+update-worker:
+	aws lambda update-function-code \
+		--function-name paper-summarizer-worker \
+		--image-uri $(ECR_URL)/paper-summarizer-worker:latest \
+		--region $(AWS_REGION)
+
+deploy-lambdas: ecr-login push-api push-worker update-api update-worker
