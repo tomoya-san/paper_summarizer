@@ -17,6 +17,12 @@ class PaperController:
             return self.__response(404, {"error": "Paper not found"})
         return self.__response(200, paper)
 
+    def mark_as_read(self, user_id: str, created_at: str) -> dict:
+        paper = self.paper_service.mark_as_read(user_id, created_at)
+        if paper is None:
+            return self.__response(404, {"error": "Paper not found"})
+        return self.__response(200, paper)
+
     def submit_papers(self, event: dict, user_id: str) -> dict:
         body = json.loads(event.get("body", "{}"))
         urls = body.get("urls", [])

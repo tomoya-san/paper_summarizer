@@ -19,6 +19,9 @@ class PaperService:
     def get_paper(self, user_id: str, created_at: str) -> dict | None:
         return self.paper_repository.find_by_key(user_id, created_at)
 
+    def mark_as_read(self, user_id: str, created_at: str) -> dict | None:
+        return self.paper_repository.mark_as_read(user_id, created_at)
+
     def submit_papers(self, urls: list[str], user_id: str) -> int:
         for url in urls:
             sqs.send_message(

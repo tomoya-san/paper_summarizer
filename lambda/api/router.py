@@ -29,6 +29,10 @@ class Router:
             created_at = path.split("/")[-1]
             return self.paper_controller.get_paper(user_id, created_at)
 
+        if method == "PATCH" and re.match(r"^/papers/[^/]+/read$", path):
+            created_at = path.split("/")[-2]
+            return self.paper_controller.mark_as_read(user_id, created_at)
+
         if method == "POST" and path == "/papers/summarize":
             return self.paper_controller.submit_papers(event, user_id)
 

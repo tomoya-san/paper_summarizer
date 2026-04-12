@@ -58,7 +58,7 @@ export default function Home() {
             </p>
           ) : (
             papers.map((paper) => (
-              <PaperCard key={paper.created_at} paper={paper} />
+              <PaperCard key={paper.created_at} paper={paper} onRead={refreshPapers} />
             ))
           )}
         </div>

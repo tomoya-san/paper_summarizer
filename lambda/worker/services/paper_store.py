@@ -17,5 +17,6 @@ class PaperStore:
                 "authors": ", ".join(authors),
                 "summary": summary,
                 "created_at": datetime.now(timezone.utc).isoformat(),
+                "is_read": False,
             }
         )
