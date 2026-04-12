@@ -1,18 +1,22 @@
 "use client";
 
-import { useState, type KeyboardEvent } from "react";
-import { X } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { submitPapers } from "@/lib/api";
+import { X } from "lucide-react";
+import { useState, type KeyboardEvent } from "react";
 
 function extractId(url: string) {
   const match = url.match(/arxiv\.org\/abs\/(.+)/);
   return match ? match[1] : url;
 }
 
-export default function SubmitForm({ onSubmitted }: { onSubmitted?: () => void }) {
+export default function SubmitForm({
+  onSubmitted,
+}: {
+  onSubmitted?: () => void;
+}) {
   const [input, setInput] = useState("");
   const [urls, setUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -73,8 +77,13 @@ export default function SubmitForm({ onSubmitted }: { onSubmitted?: () => void }
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <Button type="submit" disabled={loading || (urls.length === 0 && !input.trim())}>
-          {loading ? "Submitting..." : `Summarize${urls.length > 1 ? ` (${urls.length})` : ""}`}
+        <Button
+          type="submit"
+          disabled={loading || (urls.length === 0 && !input.trim())}
+        >
+          {loading
+            ? "Submitting..."
+            : `Summarize${urls.length > 1 ? ` (${urls.length})` : ""}`}
         </Button>
       </form>
       {urls.length > 0 && (
