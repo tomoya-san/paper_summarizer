@@ -15,16 +15,31 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Paper } from "@/lib/api";
+import { markAsRead, Paper } from "@/lib/api";
 
-export default function PaperCard({ paper }: { paper: Paper }) {
+export default function PaperCard({
+  paper,
+  onRead,
+}: {
+  paper: Paper;
+  onRead?: () => void;
+}) {
   const [open, setOpen] = useState(false);
+
+  function handleOpen() {
+    setOpen(true);
+    if (!paper.is_read) {
+      markAsRead(paper.created_at)
+        .then(() => onRead?.())
+        .catch(console.error);
+    }
+  }
 
   return (
     <>
       <Card
-        className="cursor-pointer transition-shadow hover:shadow-md"
-        onClick={() => setOpen(true)}
+        className={`cursor-pointer transition-shadow hover:shadow-md ${!paper.is_read ? "border-l-4 border-l-blue-500" : ""}`}
+        onClick={handleOpen}
       >
         <CardHeader>
           <CardTitle>{paper.title}</CardTitle>

@@ -9,6 +9,7 @@ export interface Paper {
   authors: string[];
   summary: string;
   created_at: string;
+  is_read: boolean;
 }
 
 async function authFetch(
@@ -54,6 +55,16 @@ export async function listPapers(): Promise<Paper[]> {
   if (!res.ok) throw new Error("Failed to fetch papers");
   const data = await res.json();
   return data.map(parsePaper);
+}
+
+export async function markAsRead(createdAt: string): Promise<Paper> {
+  const res = await authFetch(
+    `${API_BASE}/papers/${encodeURIComponent(createdAt)}/read`,
+    { method: "PATCH" },
+  );
+  if (!res.ok) throw new Error("Failed to mark paper as read");
+  const data = await res.json();
+  return parsePaper(data);
 }
 
 export async function getPaper(createdAt: string): Promise<Paper> {
